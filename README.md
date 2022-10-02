@@ -48,15 +48,98 @@ Bastion is configured in the Hub and Branch VNETs for VM connectivity.
 
 ## VNET peering
 
+*Allow Gateway Transit* and *Use Remote Gateway* are enabled between the Spoke and Hub VNETs, disabled for the Hub VNET peering.
+
 ## BGP peering
 
-## ARS
+Each CSR NVA establishes BGP peerings using its NIC IP address:
+-	with its local ARS (2 eBGP sessions) 
+-	with the remote CSR (1 iBGP session)
+
+Loopback addresses are configured and used for “probing” the NVA route propagation. It is not possible to use loopback addresses on the peering with the ARS.
+The ARS is NOT in the data path but will enable the routing information received from the BGP peering between the ARS and the CSR NVA to be added to the Hub and peered VNETs. 
+
+Because the ARS ASN is hard coded to 65515, BGP *as-override* is configured on the CSR NVA BGP sessions towards the ARS. This guarantees the expected route advertisements between the 2 Hub VNETs and further to the Spokes/Branches by replacing the 65515 ARS ASN in the AS-path by the CSR NVA ASN (64000) before readvertisement to the remote ARS. 
+
+Finally, *next-hop-self* is required on the iBGP session between the 2 CSR NVAs so that when routes get advertised from one Hub VNET to the other, the ARS Next-Hop is replaced by the CSR NIC IP.
 
 ## UDRs
 
+With this design static routes to the targeted destination VNETs are mandatory on the *CSRSubnet* to avoid routing loops out of the CSR NVA NIC. The UDR constraint can be removed by using VxLAN or IPSec between the 2 CSR NVAs but will result in throughput limitation.
+
+## CSR confdiguration
+
+### CSR1
+
+```
+interface Loopback11
+ ip address 1.1.1.1 255.255.255.255
+!
+! default route pointing to CSR subnet default gateway, so that tunnel outside traffic and internet go out LAN port
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 10.0.253.1
+! neighbor reachability of the remote CSR to prevent recursive routing failure ! for CSR2 BGP endpoint learned via BGP
+ip route 20.0.253.4 255.255.255.255 GigabitEthernet1 10.0.253.1
+! ARS subnet reachability to prevent recursive routing
+ip route 10.0.0.0 255.255.255.0 10.0.253.1
+!
+router bgp 64000
+ bgp log-neighbor-changes
+ network 1.1.1.1 mask 255.255.255.255
+ ! BGP session towards the local ARS instances
+ ! as-override will replace 65515 by 64000 in the AS-path of any advertised routes to these 2 neighbors
+ neighbor 10.0.0.4 remote-as 65515
+ neighbor 10.0.0.4 ebgp-multihop 255
+ neighbor 10.0.0.4 as-override
+ neighbor 10.0.0.4 soft-reconfiguration inbound
+ neighbor 10.0.0.5 remote-as 65515
+ neighbor 10.0.0.5 ebgp-multihop 255
+ neighbor 10.0.0.5 as-override
+ ! BGP session towards the remote CSR
+ neighbor 20.0.253.4 remote-as 64000
+ ! iBGP session: next-hop-self will force the next-hop of advertised routes (remote ARS) to be replaced by the local CSR address
+ neighbor 20.0.253.4 next-hop-self
+!
+```
+
+### CSR2
+
+```
+interface Loopback22
+ ip address 2.2.2.2 255.255.255.255
+!
+! default route pointing to CSR subnet default gateway, so that tunnel outside traffic and internet go out LAN port
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 20.0.253.1
+! neighbor reachability of the remote CSR to prevent recursive routing failure ! for CSR1 BGP endpoint learned via BGP
+ip route 10.0.253.4 255.255.255.255 GigabitEthernet1 20.0.253.1
+! ARS subnet reachability to prevent recursive routing failure
+ip route 20.0.0.0 255.255.255.0 20.0.253.1
+!
+router bgp 64000
+ bgp log-neighbor-changes
+ network 2.2.2.2 mask 255.255.255.255
+ ! BGP session towards the remote CSR
+ neighbor 10.0.253.4 remote-as 64000
+ ! iBGP session: next-hop-self will force the next-hop of advertised routes (remote ARS) to be replaced by the local CSR address
+ neighbor 10.0.253.4 next-hop-self
+ ! BGP session towards the local ARS instances
+ ! as-override will replace 65515 by 64000 in the AS-path of any advertised routes to these 2 neighbors
+ neighbor 20.0.0.4 remote-as 65515
+ neighbor 20.0.0.4 ebgp-multihop 255
+ neighbor 20.0.0.4 as-override
+ neighbor 20.0.0.5 remote-as 65515
+ neighbor 20.0.0.5 ebgp-multihop 255
+ neighbor 20.0.0.5 as-override
+!
+```
+
 ## Troubleshooting
 
-<Table> 
+| Component | Description | GUI/CLI |
+| --- | --- | --- |
+| VMs | routes used by a given NIC | GUI / NIC *Effective routes* blade |
+| VPN GW | BGP learned and advertised routes | GUI / VPNGW *BGP peers* blade |
+| ARS | NVA learned and advertised routes | az CLI / `az network routeserver peering list-learned-routes --name RS1BGP --routeserver RouteServer1 --resource-group ars-lab1` |
+| CSR | NVA learned and advertised routes | Cisco cLI / `sh ip bgp nei ad` `sh ip bgp routef` |
 
 # 5. Scenario 1: Spoke-to-Spoke
 
