@@ -150,9 +150,11 @@ router bgp 64000
 Spoke to Spoke communication transits via the CSR NVA BGP peering.
 The ARS in Hub1 VNET is learning the Hub2 and Spoke 2 ranges from the Hub1 CSR NVA.
 
-
+<img width="196" alt="Scenario 1_ARS_Spoke routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193460642-2685a3e9-c556-4b7b-af40-e25e96906f4a.png">
 
 Hub2 & Spoke 2 ranges (20.0.0.0/16 & 20.3.0.0/16) have the Hub1 CSR NVA as next-hop virtual gateway.
+
+<img width="698" alt="Scenario 1_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193460684-349a7d4a-a9b5-42cc-a605-e41b9c9b5141.png">
 
 # 6. Scenario 2: Azure <=> On-prem
 
