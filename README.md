@@ -67,7 +67,7 @@ Finally, *next-hop-self* is required on the iBGP session between the 2 CSR NVAs 
 
 With this design static routes to the targeted destination VNETs are mandatory on the *CSRSubnet* to avoid routing loops out of the CSR NVA NIC. The UDR constraint can be removed by using VxLAN or IPSec between the 2 CSR NVAs but will result in throughput limitation.
 
-## CSR confdiguration
+## CSR configuration
 
 CSR1
 ```
@@ -147,13 +147,24 @@ router bgp 64000
 Spoke to Spoke communication transits via the CSR NVA BGP peering.
 Diagram?
 
-The ARS in Hub1 VNET is learning the Hub2 and Spoke2 ranges from the Hub1 CSR NVA:
- 
-<img width="196" alt="Scenario 1_ARS_Spoke routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193460642-2685a3e9-c556-4b7b-af40-e25e96906f4a.png">
-
 In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 20.3.0.0/16) have the Hub1 CSR NVA as next-hop virtual gateway:
 
 <img width="698" alt="Scenario 1_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193460684-349a7d4a-a9b5-42cc-a605-e41b9c9b5141.png">
+
+Let's split it up:
+- The ARS in Hub2 is advertising the Hub2 & Spoke2 ranges to the Hub2 CSR NVA:
+ <img width="220" alt="Scenario 1_ARS2_Spoke2 routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465380-bd32f25e-8cd9-4921-8dfa-bb82bcf8bcea.png">
+
+- The Hub2 CSR NVA is installing these routes in its routing table and forwarding them to the Hub1 CSR NVA:
+ <img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
+ <img width="599" alt="Scenario 1_CSR2_sh ip bgp nei adv routes_Spokes" src="https://user-images.githubusercontent.com/110976272/193465419-5e605e0b-39d5-463f-a4cb-817e366e02ab.png">
+
+- The Hub1 CSR NVA is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
+ <img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
+
+- The ARS in Hub1 VNET is learning the Hub2 and Spoke2 ranges from the Hub1 CSR NVA:
+ 
+ <img width="196" alt="Scenario 1_ARS_Spoke routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193460642-2685a3e9-c556-4b7b-af40-e25e96906f4a.png">
 
 The same observations are mirrored on ARS2 and Spoke2VM.
  
@@ -163,19 +174,6 @@ The same observations are mirrored on ARS2 and Spoke2VM.
  
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
 diagram?
-
-The ARS in Hub2 is advertising the Hub2 & Spoke2 ranges to the Hub2 CSR NVA:
-
-<img width="220" alt="Scenario 1_ARS2_Spoke2 routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465380-bd32f25e-8cd9-4921-8dfa-bb82bcf8bcea.png">
-
-The Hub2 CSR NVA is installing these routes in its routing table and forwarding them to the Hub1 CSR NVA:
-
-<img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
-<img width="599" alt="Scenario 1_CSR2_sh ip bgp nei adv routes_Spokes" src="https://user-images.githubusercontent.com/110976272/193465419-5e605e0b-39d5-463f-a4cb-817e366e02ab.png">
-
-Hub1 CSR NVA is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
-
-<img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
 
 The ARS1 advertised routes to the CSR NVA contain the 10.2.0.0/16 On-prem range with AS-path = Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 (65515):
  
