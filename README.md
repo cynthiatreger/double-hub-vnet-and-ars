@@ -135,7 +135,7 @@ router bgp 64000
 | VPN GW | BGP learned and advertised routes | GUI / VPNGW *BGP peers* blade |
 | ARS | routes learned from the NVA | az CLI / `az network routeserver peering list-learned-routes --name <rs_peer_name> --routeserver <rs_name> --resource-group <rg_name>` |
 | ARS | routes advertised to the NVA | az CLI / `az network routeserver peering list-advertised-routes --name <rs_peer_name> --routeserver <rs_name> --resource-group <rg_name>` 
-| CSR | BGP session status | Cisco CLI / `show ip bgp summary` |
+| CSR | BGP neighbors & session status | Cisco CLI / `show ip bgp summary` |
 | CSR | BGP routes learned from specified neighbor | Cisco CLI / `show ip bgp neighbors <peer_ip_@> routes` |
 | CSR | advertised BGP routes | Cisco CLI / `show ip bgp neighbors <peer_ip_@> advertised-routes` |
 | CSR | BGP originated routes in the IP routing table | Cisco CLI / `show ip route bgp` |
@@ -158,7 +158,7 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
  <img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
  <img width="599" alt="Scenario 1_CSR2_sh ip bgp nei adv routes_Spokes" src="https://user-images.githubusercontent.com/110976272/193465419-5e605e0b-39d5-463f-a4cb-817e366e02ab.png">
 
-- The Hub1 CSR NVA is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
+- Likewise, the Hub1 CSR NVA is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
  <img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
 
 - The ARS in Hub1 VNET is learning the Hub2 and Spoke2 ranges from the Hub1 CSR NVA and programming all the VMs in its VNET and peered VNETs with these routes:
@@ -176,7 +176,7 @@ Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to 
 
 <img width="698" alt="Scenario 2_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193461177-fc5b5761-7d16-43cf-8db6-916567e18029.png">
 
-Traffic from On-prem to Azure is directed to the Branch1 VNET VPNGW (Next Hop = 10.2.254.4). Branch1 VPNGW BGP learned routes:
+Traffic from On-prem to Azure is directed to the Branch1 VNET VPN GW (Next Hop = 10.2.254.4). Branch1 VPN GW BGP learned routes:
 
 <img width="827" alt="Scenario 2_Branch1 VPNGW learned routes" src="https://user-images.githubusercontent.com/110976272/193461603-711a4680-a216-405b-a1ab-76a31ff837cd.png">
 
