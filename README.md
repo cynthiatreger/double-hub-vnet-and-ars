@@ -162,11 +162,9 @@ Let's split it up:
 - The Hub1 CSR NVA is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
  <img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
 
-- The ARS in Hub1 VNET is learning the Hub2 and Spoke2 ranges from the Hub1 CSR NVA:
+- The ARS in Hub1 VNET is learning the Hub2 and Spoke2 ranges from the Hub1 CSR NVA and programming all the VMs in its VNET and peered VNETs with these routes:
  
  <img width="196" alt="Scenario 1_ARS_Spoke routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193460642-2685a3e9-c556-4b7b-af40-e25e96906f4a.png">
-
-The same observations are mirrored on ARS2 and Spoke2VM.
  
 # 6. Scenario 2: Azure <=> On-prem
 
@@ -175,14 +173,24 @@ The same observations are mirrored on ARS2 and Spoke2VM.
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
 diagram?
 
-The ARS1 advertised routes to the CSR NVA contain the 10.2.0.0/16 On-prem range with AS-path = Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 (65515):
+The ARS1 advertised routes to the Hub1 CSR NVA include the 10.2.0.0/16 On-prem range with AS-path = Branch1 VPN GW (300) > Hub1 VPN GW (100) > ARS1 (65515):
  
 <img width="234" alt="Scenario 2_ARS_Onprem routes_advertised to NVA" src="https://user-images.githubusercontent.com/110976272/193461058-1f88d944-9472-4c05-99c9-f24d6dfc903b.png">
 
-The ARS1 learned routes from the CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the the AS-path: Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000):
+The ARS1 learned routes from the Hub CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the AS-path: Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000):
 
-<img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193461076-0f31fb53-6ff0-4231-924e-a1acfc45e255.png">
+<img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193465830-12659ffd-9b13-4921-b73a-08b4c5c0cb55.png">
 This looped route will no further be used but illustrate the impact of the *as-override* command configured on the CSR NVA session with the ASR.
+
+The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and advertised by ARS2 to the Hu2 CSR NVA and further to the Hub1 CSR NVA:
+
+<img width="221" alt="Scenario 2_ARS2_Onprem routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465940-2194951d-66ab-4e7f-af4b-96cad04e9c0c.png">
+
+However NVA1 prefers the “local” Hub1 route:
+ 
+ 
+ 
+ 
 
 Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
 
