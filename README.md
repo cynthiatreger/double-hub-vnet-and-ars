@@ -229,7 +229,7 @@ Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 V
 
 - As per the ARS1 learned routes from CSR NVA1, the On-prem range is no longer locally reflected but advertised from the Hub2 CSR NVA.
 Updated AS-path: Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 ASN overridden (64000) > NVA ASN (64000)
- <img width="199" alt="Scenario 2_ARS_Onprem routes_NVA learned_failover" src="https://user-images.githubusercontent.com/110976272/193461760-aa244fa7-28c0-4b9b-b07a-79e0c881f2a2.png">
+<img width="259" alt="Scenario 2_ARS_Onprem routes_learned_failover" src="https://user-images.githubusercontent.com/110976272/193469739-5564240c-6a8a-4ee6-8f14-cad878722532.png">
 
 # 7. Scenario 3: On-prem to On-prem
 
