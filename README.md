@@ -138,8 +138,12 @@ router bgp 64000
 | --- | --- | --- |
 | VMs | routes used by a given NIC | GUI / NIC *Effective routes* blade |
 | VPN GW | BGP learned and advertised routes | GUI / VPNGW *BGP peers* blade |
-| ARS | NVA learned and advertised routes | az CLI / `az network routeserver peering list-learned-routes --name RS1BGP --routeserver RouteServer1 --resource-group ars-lab1` |
-| CSR | NVA learned and advertised routes | Cisco cLI / `sh ip bgp nei ad` `sh ip bgp routef` |
+| ARS | routes learned from the NVA | az CLI / `az network routeserver peering list-learned-routes --name RS1BGP --routeserver RouteServer1 --resource-group ars-lab1` |
+| ARS | routes advertised to the NVA | az CLI / `az network routeserver peering list-advertised-routes --name RS1BGP --routeserver RouteServer1 --resource-group ars-lab1` 
+| CSR | BGP session status | Cisco CLI / `show ip bgp summary` |
+| CSR | BGP routes learned from specified neighbor | Cisco CLI / `show ip bgp neighbors 10.0.0.5 routes` |
+| CSR | advertised BGP routes | Cisco CLI / `show ip bgp neighbors 10.0.0.5 advertised-routes` |
+| CSR | BGP originated routes in the IP routing table | Cisco CLI / `show ip route bgp` |
 
 # 5. Scenario 1: Spoke-to-Spoke
 
