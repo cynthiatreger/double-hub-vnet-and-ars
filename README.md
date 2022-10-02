@@ -173,25 +173,6 @@ Let's split it up:
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
 diagram?
 
-The ARS1 advertised routes to the Hub1 CSR NVA include the 10.2.0.0/16 On-prem range with AS-path = Branch1 VPN GW (300) > Hub1 VPN GW (100) > ARS1 (65515):
- 
-<img width="234" alt="Scenario 2_ARS_Onprem routes_advertised to NVA" src="https://user-images.githubusercontent.com/110976272/193461058-1f88d944-9472-4c05-99c9-f24d6dfc903b.png">
-
-The ARS1 learned routes from the Hub CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the AS-path: Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000):
-
-<img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193465830-12659ffd-9b13-4921-b73a-08b4c5c0cb55.png">
-This looped route will no further be used but illustrate the impact of the *as-override* command configured on the CSR NVA session with the ASR.
-
-The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and advertised by ARS2 to the Hu2 CSR NVA and further to the Hub1 CSR NVA:
-
-<img width="221" alt="Scenario 2_ARS2_Onprem routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465940-2194951d-66ab-4e7f-af4b-96cad04e9c0c.png">
-
-However NVA1 prefers the “local” Hub1 route:
- 
- 
- 
- 
-
 Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
 
 <img width="698" alt="Scenario 2_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193461177-fc5b5761-7d16-43cf-8db6-916567e18029.png">
@@ -199,10 +180,26 @@ Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to 
 Traffic from On-prem to Azure is directed to the Branch1 VNET VPNGW (Next Hop = 10.2.254.4). Branch1 VPNGW BGP learned routes:
 
 <img width="827" alt="Scenario 2_Branch1 VPNGW learned routes" src="https://user-images.githubusercontent.com/110976272/193461603-711a4680-a216-405b-a1ab-76a31ff837cd.png">
-Hub1 & Spoke1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 VNET and advertised via the Hub1 VPN GW (AS 100).
 
+Hub1 & Spoke1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 VNET and advertised via the Hub1 VPN GW (AS 100).
+ 
 Hub2 & Spoke2 ranges (20.0.0.0/16 & 20.3.0.0/16) are originated from the Hub2 VNET, propagated to Hub1 VNET and advertised via the Hub1 VPN GW. 
 AS-path = ARS2 (65515 rewritten in 64000 when reaching ARS1) > NVA2 (64000) > NVA1 (iBGP) > ARS1 (65515) > VPNGW1 (100)
+ 
+Data path & route analysis:
+
+- The ARS1 advertised routes to the Hub1 CSR NVA include the 10.2.0.0/16 On-prem range with AS-path = Branch1 VPN GW (300) > Hub1 VPN GW (100) > ARS1 (65515):
+ <img width="234" alt="Scenario 2_ARS_Onprem routes_advertised to NVA" src="https://user-images.githubusercontent.com/110976272/193461058-1f88d944-9472-4c05-99c9-f24d6dfc903b.png">
+ This route will programmed in all the VMs in the Hub1 VNET and its peered VNETs.
+ 
+ - The ARS1 learned routes from the Hub1 CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the AS-path: Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000):
+ <img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193465830-12659ffd-9b13-4921-b73a-08b4c5c0cb55.png">
+ This looped route will no further be used but illustrate the impact of the *as-override* command configured on the CSR NVA session with the ASR.
+
+- The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and advertised by ARS2 to the Hu2 CSR NVA and further to the Hub1 CSR NVA:
+ <img width="221" alt="Scenario 2_ARS2_Onprem routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465940-2194951d-66ab-4e7f-af4b-96cad04e9c0c.png">
+
+However NVA1 prefers the “local” Hub1 route and no further advertises the routes learned from Hub2.
 
 ## Failover mode
 
