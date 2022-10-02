@@ -134,18 +134,25 @@ router bgp 64000
 
 ## Troubleshooting
 
-| Component | Description | GUI/CLI |
+| Component | Description | GUI / CLI |
 | --- | --- | --- |
 | VMs | routes used by a given NIC | GUI / NIC *Effective routes* blade |
 | VPN GW | BGP learned and advertised routes | GUI / VPNGW *BGP peers* blade |
-| ARS | routes learned from the NVA | az CLI / `az network routeserver peering list-learned-routes --name RS1BGP --routeserver RouteServer1 --resource-group ars-lab1` |
-| ARS | routes advertised to the NVA | az CLI / `az network routeserver peering list-advertised-routes --name RS1BGP --routeserver RouteServer1 --resource-group ars-lab1` 
+| ARS | routes learned from the NVA | az CLI / `az network routeserver peering list-learned-routes --name <rs_peer_name> --routeserver <rs_name> --resource-group <rg_name>` |
+| ARS | routes advertised to the NVA | az CLI / `az network routeserver peering list-advertised-routes --name <rs_peer_name> --routeserver <rs_name> --resource-group <rg_name>` 
 | CSR | BGP session status | Cisco CLI / `show ip bgp summary` |
-| CSR | BGP routes learned from specified neighbor | Cisco CLI / `show ip bgp neighbors 10.0.0.5 routes` |
-| CSR | advertised BGP routes | Cisco CLI / `show ip bgp neighbors 10.0.0.5 advertised-routes` |
+| CSR | BGP routes learned from specified neighbor | Cisco CLI / `show ip bgp neighbors <peer_ip_@> routes` |
+| CSR | advertised BGP routes | Cisco CLI / `show ip bgp neighbors <peer_ip_@> advertised-routes` |
 | CSR | BGP originated routes in the IP routing table | Cisco CLI / `show ip route bgp` |
 
 # 5. Scenario 1: Spoke-to-Spoke
+
+Spoke to Spoke communication transits via the CSR NVA BGP peering.
+The ARS in Hub1 VNET is learning the Hub2 and Spoke 2 ranges from the Hub1 CSR NVA.
+
+
+
+Hub2 & Spoke 2 ranges (20.0.0.0/16 & 20.3.0.0/16) have the Hub1 CSR NVA as next-hop virtual gateway.
 
 # 6. Scenario 2: Azure <=> On-prem
 
