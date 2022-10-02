@@ -161,7 +161,7 @@ The same observations are mirrored on ARS2 and Spoke2VM.
 ## Nominal mode
  
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
- diagram?
+diagram?
  
 The ARS1 advertised routes to the CSR NVA contain the 10.2.0.0/16 On-prem range with AS-path = Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 (65515):
  
@@ -170,13 +170,45 @@ The ARS1 advertised routes to the CSR NVA contain the 10.2.0.0/16 On-prem range 
 The ARS1 learned routes from the CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the the AS-path: Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000):
  
 <img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193461076-0f31fb53-6ff0-4231-924e-a1acfc45e255.png">
-This looped route will no further be used but illustrate the impact of the as-override command configured on the CSR NVA session with the ASR.
-
-Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
+This looped route will no further be used but illustrate the impact of the *as-override* command configured on the CSR NVA session with the ASR.
  
+Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
+
 <img width="698" alt="Scenario 2_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193461177-fc5b5761-7d16-43cf-8db6-916567e18029.png">
 
+Traffic from On-prem to Azure is directed to the Branch1 VNET VPNGW (Next Hop = 10.2.254.4). Branch1 VPNGW BGP learned routes:
+ 
+<img width="827" alt="Scenario 2_Branch1 VPNGW learned routes" src="https://user-images.githubusercontent.com/110976272/193461603-711a4680-a216-405b-a1ab-76a31ff837cd.png">
+Hub1 & Spoke1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 VNET and advertised via the Hub1 VPN GW (AS 100).
+
+Hub2 & Spoke2 ranges (20.0.0.0/16 & 20.3.0.0/16) are originated from the Hub2 VNET, propagated to Hub1 VNET and advertised via the Hub1 VPN GW. 
+AS-path = ARS2 (65515 rewritten in 64000 when reaching ARS1) > NVA2 (64000) > NVA1 (iBGP) > ARS1 (65515) > VPNGW1 (100)
+
 ## Failover mode
+ 
+To simulate the failover, the Hub1VPNGW S2S Connection is deleted:
+
+<img width="747" alt="Scenario 2_disable S2S" src="https://user-images.githubusercontent.com/110976272/193461941-49e14adb-fdb7-4867-91d4-92e50c0f56fb.png">
+
+Traffic between Azure and On-prem switches to the cross-Hub VNET NVA path to use the remaining exit to On-prem.
+Diagram?
+ 
+As per the ARS1 learned routes from CSR NVA1, the On-prem range is no longer locally reflected but advertised from the Hub2 CSR NVA.
+Updated AS-path: Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 ASN overridden (64000) > NVA ASN (64000)
+
+<img width="199" alt="Scenario 2_ARS_Onprem routes_NVA learned_failover" src="https://user-images.githubusercontent.com/110976272/193461760-aa244fa7-28c0-4b9b-b07a-79e0c881f2a2.png">
+
+Traffic from Azure to the 10.2.0.0/16 On-prem subnet is now sent to the Hub1 CSR NVA, where it will be passed to the Hub2 CSR NVA and Hub2 VPNGW. Effective routes of Spoke1VM-nic:
+ 
+<img width="686" alt="Scenario 2_Spoke1VM_Effective routes_failover" src="https://user-images.githubusercontent.com/110976272/193462191-bd996e19-e3d3-4566-82f7-76d7de069f1a.png">
+
+The updated On-prem routes can be observed from the Branch2 VPNGW BGP learned routes:
+ 
+<img width="787" alt="Scenario 2_Branch2 VPNGW learned routes_failover" src="https://user-images.githubusercontent.com/110976272/193462212-a29bf4e8-bc51-4d1b-9e01-d6ecad804ed3.png">
+
+Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 VNET but now propagated via the CSR NVA BGP peering to the Hub2 VNET and advertised via the Hub1 VPNGW
+ 
+AS-path = ARS1 (65515 rewritten in 64000 when reaching ARS2) > NVA1 (64000) > NVA2 (iBGP) > ARS2 (65515) > VPNGW2 (200)
 
 # 7. Scenario 3: On-prem to On-prem
 
