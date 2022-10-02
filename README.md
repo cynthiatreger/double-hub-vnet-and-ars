@@ -152,7 +152,7 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
 ### Data path & route analysis:
  
 - The ARS in Hub2 is advertising the Hub2 & Spoke2 ranges to the Hub2 CSR NVA:
- <img width="220" alt="Scenario 1_ARS2_Spoke2 routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465380-bd32f25e-8cd9-4921-8dfa-bb82bcf8bcea.png">
+<img width="219" alt="image" src="https://user-images.githubusercontent.com/110976272/193473914-917ff443-27e0-4d49-bd73-9cfff2fd442b.png">
 
 - The Hub2 CSR NVA is installing these routes in its routing table and forwarding them to the Hub1 CSR NVA:
  <img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
@@ -162,8 +162,6 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
  <img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
 
 - The ARS in Hub1 VNET is learning the Hub2 and Spoke2 ranges from the Hub1 CSR NVA and programming all the VMs in its VNET and peered VNETs with these routes:
- 
- <img width="196" alt="Scenario 1_ARS_Spoke routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193460642-2685a3e9-c556-4b7b-af40-e25e96906f4a.png">
  <img width="235" alt="image" src="https://user-images.githubusercontent.com/110976272/193473788-fa4799cd-f457-4f52-9963-dfad714a5674.png">
  
 # 6. Scenario 2: Azure <=> On-prem
