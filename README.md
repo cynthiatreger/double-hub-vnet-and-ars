@@ -58,16 +58,14 @@ Bastion is configured in the Hub and Branch VNETs for VM connectivity.
 
 <Table> 
 
-# 5. Scenarios
+# 5. Scenario 1: Spoke-to-Spoke
 
-## 5.1 Spoke-to-Spoke
+# 6. Scenario 2: Azure <=> On-prem
 
-## 5.2 Azure <=> On-prem
+## 6.1. Nominal mode
 
-### Nominal mode
+## 6.2. Failover mode
 
-### Failover mode
-
-## 5.3 On-prem to On-prem
+# 7. Scenario 3: On-prem to On-prem
 
 
