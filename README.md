@@ -18,6 +18,8 @@ The Inter-region (Spoke-to-Spoke) and On-prem scenarios have been successfully d
 
 # 3. Lab Description and Topology
 
+## Description
+
 The lab consists of 2 regions, each hosting:
 -	1 Hub VNET
 -	1 peered Spoke VNET
@@ -38,6 +40,34 @@ Bastion is configured in the Hub and Branch VNETs for VM connectivity.
 
 *The On-prem is emulated by 2 separate Branch VNETs configured intentionally with the same address space, to appear as a single network from the Azure VNETs and avoid the transitivity that would have resulted from having a single Branch VNET with 2 tunnels to each Hub VPN GWs.*
 
+## Topology
+
 <Diagram>
+
+# 4. Routing and Troubleshooting
+
+## VNET peering
+
+## BGP peering
+
+## ARS
+
+## UDRs
+
+## Troubleshooting
+
+<Table> 
+
+# 5. Scenarios
+
+## 5.1 Spoke-to-Spoke
+
+## 5.2 Azure <=> On-prem
+
+### Nominal mode
+
+### Failover mode
+
+## 5.3 On-prem to On-prem
 
 
