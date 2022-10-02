@@ -17,3 +17,27 @@ Why?
 The Inter-region (Spoke-to-Spoke) and On-prem scenarios have been successfully deployed with both S2S VPN and ER On-prem connectivity. For simplicity and ease of reproduction, only the S2S VPN deployment is detailed here.
 
 # 3. Lab Description and Topology
+
+The lab consists of 2 regions, each hosting:
+-	1 Hub VNET
+-	1 peered Spoke VNET
+-	1 Branch VNET emulating the On-prem
+
+The 2 Hub VNETs are connected by VNET peering.
+
+The connectivity between Azure and On-prem is provided by S2S VPN.
+
+Each VNET contains a test VM in the *VMSubnet*.
+
+In addition, each hub VNET contains:
+-	1 x ARS in the *RouteServerSubnet*
+-	1 x active/active VPN GW (mandatory for the deployment of ARS in the Hub VNET) in the GatewaySubnet
+-	1 x CSR NVA in the *CSRSubnet*
+
+Bastion is configured in the Hub and Branch VNETs for VM connectivity.
+
+*The On-prem is emulated by 2 separate Branch VNETs configured intentionally with the same address space, to appear as a single network from the Azure VNETs and avoid the transitivity that would have resulted from having a single Branch VNET with 2 tunnels to each Hub VPN GWs.*
+
+<Diagram>
+
+
