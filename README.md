@@ -193,7 +193,7 @@ AS-path = ARS2 (65515 rewritten in 64000 when reaching ARS1) > NVA2 (64000) > NV
  <img width="234" alt="Scenario 2_ARS_Onprem routes_advertised to NVA" src="https://user-images.githubusercontent.com/110976272/193461058-1f88d944-9472-4c05-99c9-f24d6dfc903b.png">
  
  - The ARS1 learned routes from the Hub1 CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the AS-path: Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000). This looped route will no further be used but illustrates the impact of the *as-override* command configured on the CSR NVA session with the ASR.
- <img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193465830-12659ffd-9b13-4921-b73a-08b4c5c0cb55.png">
+ <img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193466704-1d525002-309c-4bcc-a983-b8a303649894.png">
 
 - The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and advertised by ARS2 to the Hu2 CSR NVA and further to the Hub1 CSR NVA:
  <img width="221" alt="Scenario 2_ARS2_Onprem routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465940-2194951d-66ab-4e7f-af4b-96cad04e9c0c.png">
