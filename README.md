@@ -69,7 +69,7 @@ With this design static routes to the targeted destination VNETs are mandatory o
 
 ## CSR confdiguration
 
-### CSR1
+CSR1
 
 ```
 interface Loopback11
@@ -101,7 +101,7 @@ router bgp 64000
 !
 ```
 
-### CSR2
+CSR2
 
 ```
 interface Loopback22
@@ -164,13 +164,16 @@ In nominal mode traffic between Azure and On-prem transits via the “local” V
  diagram?
  
 The ARS1 advertised routes to the CSR NVA contain the 10.2.0.0/16 On-prem range with AS-path = Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 (65515):
+ 
 <img width="234" alt="Scenario 2_ARS_Onprem routes_advertised to NVA" src="https://user-images.githubusercontent.com/110976272/193461058-1f88d944-9472-4c05-99c9-f24d6dfc903b.png">
 
 The ARS1 learned routes from the CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the the AS-path: Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000):
+ 
 <img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193461076-0f31fb53-6ff0-4231-924e-a1acfc45e255.png">
 This looped route will no further be used but illustrate the impact of the as-override command configured on the CSR NVA session with the ASR.
 
 Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
+ 
 <img width="698" alt="Scenario 2_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193461177-fc5b5761-7d16-43cf-8db6-916567e18029.png">
 
 ## Failover mode
