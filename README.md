@@ -163,7 +163,20 @@ The same observations are mirrored on ARS2 and Spoke2VM.
  
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
 diagram?
- 
+
+The ARS in Hub2 is advertising the Hub2 & Spoke2 ranges to the Hub2 CSR NVA:
+
+<img width="220" alt="Scenario 1_ARS2_Spoke2 routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465380-bd32f25e-8cd9-4921-8dfa-bb82bcf8bcea.png">
+
+The Hub2 CSR NVA is installing these routes in its routing table and forwarding them to the Hub1 CSR NVA:
+
+<img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
+<img width="599" alt="Scenario 1_CSR2_sh ip bgp nei adv routes_Spokes" src="https://user-images.githubusercontent.com/110976272/193465419-5e605e0b-39d5-463f-a4cb-817e366e02ab.png">
+
+Hub1 CSR NVA is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
+
+<img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
+
 The ARS1 advertised routes to the CSR NVA contain the 10.2.0.0/16 On-prem range with AS-path = Branch1VPNGW (300) > Hub1VPNGW (100) > ARS1 (65515):
  
 <img width="234" alt="Scenario 2_ARS_Onprem routes_advertised to NVA" src="https://user-images.githubusercontent.com/110976272/193461058-1f88d944-9472-4c05-99c9-f24d6dfc903b.png">
