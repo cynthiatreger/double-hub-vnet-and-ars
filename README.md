@@ -152,7 +152,7 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
 ### Data path & route analysis:
  
 - The ARS in Hub2 is advertising the Hub2 & Spoke2 ranges to the Hub2 CSR NVA:
-<img width="219" alt="image" src="https://user-images.githubusercontent.com/110976272/193473914-917ff443-27e0-4d49-bd73-9cfff2fd442b.png">
+ <img width="234" alt="image" src="https://user-images.githubusercontent.com/110976272/193474025-79bcb2b0-8d41-4851-b9bd-8a8f0e066e82.png">
 
 - The Hub2 CSR NVA is installing these routes in its routing table and forwarding them to the Hub1 CSR NVA:
  <img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
@@ -192,42 +192,39 @@ AS-path = ARS2 (65515 rewritten in 64000 when reaching ARS1) > NVA2 (64000) > NV
  - The ARS1 learned routes from the Hub1 CSR NVA show that this same 10.2.0.0/16 On-prem route is reflected by the NVA from the ARS, as per the AS-path: Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000). This looped route will no further be used but illustrates the impact of the *as-override* command configured on the CSR NVA session with the ASR.
  <img width="194" alt="Scenario 2_ARS_Onprem routes_NVA learned" src="https://user-images.githubusercontent.com/110976272/193466704-1d525002-309c-4bcc-a983-b8a303649894.png">
 
-- The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and its peered VNETs, and advertised by ARS2 to the Hu2 CSR NVA and further to the Hub1 CSR NVA:
- <img width="221" alt="Scenario 2_ARS2_Onprem routes_advertised" src="https://user-images.githubusercontent.com/110976272/193465940-2194951d-66ab-4e7f-af4b-96cad04e9c0c.png">
+- The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and its peered VNETs, and advertised by ARS2 to the Hub2 CSR NVA and further to the Hub1 CSR NVA:
+ <img width="242" alt="image" src="https://user-images.githubusercontent.com/110976272/193474073-d0d03030-99ec-479e-8fab-bbf3c4dd2577.png">
 
 However the Hub1 CSR NVA prefers the “local” Hub1 route and will not advertise the routes learned from Hub2.
 
-## 6.2. Failover mode (Hub1 S2S down)
+## 6.2. Failover mode (Branch1-Hub1 S2S down)
 
-To simulate the failover, the Hub1VPNGW S2S Connection is deleted:
-
-<img width="747" alt="Scenario 2_disable S2S" src="https://user-images.githubusercontent.com/110976272/193461941-49e14adb-fdb7-4867-91d4-92e50c0f56fb.png">
+To simulate the failover, the Branch-Hub1 S2S Connection is deleted:
+ <img width="747" alt="Scenario 2_disable S2S" src="https://user-images.githubusercontent.com/110976272/193461941-49e14adb-fdb7-4867-91d4-92e50c0f56fb.png">
 
 Traffic between Azure and On-prem switches to the cross-Hub VNET NVA path to use the remaining exit to On-prem.
 
 Traffic from Azure to the 10.2.0.0/16 On-prem subnet is now sent to the Hub1 CSR NVA, where it will be passed to the Hub2 CSR NVA and Hub2 VPN GW. Effective routes of Spoke1VM-nic:
-
-<img width="686" alt="Scenario 2_Spoke1VM_Effective routes_failover" src="https://user-images.githubusercontent.com/110976272/193469419-52cfc04d-0870-4807-a592-298f1be8673b.png">
+ <img width="686" alt="Scenario 2_Spoke1VM_Effective routes_failover" src="https://user-images.githubusercontent.com/110976272/193469419-52cfc04d-0870-4807-a592-298f1be8673b.png">
 
 The return updated On-prem routes can be observed from the Branch2 VPNGW BGP learned routes:
-
-<img width="787" alt="Scenario 2_Branch2 VPNGW learned routes_failover" src="https://user-images.githubusercontent.com/110976272/193469432-bfedd908-026e-41e4-b3e0-e403e8d427e4.png">
+ <img width="787" alt="Scenario 2_Branch2 VPNGW learned routes_failover" src="https://user-images.githubusercontent.com/110976272/193469432-bfedd908-026e-41e4-b3e0-e403e8d427e4.png">
 
 Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 VNET but now propagated via the Hub1 CSR NVA BGP peering to the Hub2 VNET and advertised via the Hub2 VPN GW. AS-path = ARS1 (65515 rewritten in 64000 when reaching ARS2) > NVA1 (64000) > NVA2 (iBGP) > ARS2 (65515) > VPNGW2 (200)
 
 ### Data path & route analysis:
 
 - The On-prem route already observed in nominal mode and advertised by ARS2 to NVA2 is still valid. AS-path = Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 (65515)
-<img width="221" alt="Scenario 2_ARS2_Onprem routes_advertised" src="https://user-images.githubusercontent.com/110976272/193469560-216ebfec-5644-4489-a681-a8baada0d8a3.png">
+ <img width="242" alt="image" src="https://user-images.githubusercontent.com/110976272/193474108-e658d9c9-9967-4157-84c1-a21949602d19.png">
 
 - The CSR1 routing table for the 10.2.0.0/16 On-prem range has now NVA2 as next-hop:
-<img width="562" alt="Scenario 2_CSR_sh ip route Onprem_failover" src="https://user-images.githubusercontent.com/110976272/193469614-aa0e06fc-a9b6-4082-8e88-8822ce8d398b.png">
+ <img width="562" alt="Scenario 2_CSR_sh ip route Onprem_failover" src="https://user-images.githubusercontent.com/110976272/193469614-aa0e06fc-a9b6-4082-8e88-8822ce8d398b.png">
 
 - This route is BGP learned from NVA2:
  <img width="473" alt="Scenario 2_CSR_sh ip bgp Onprem range_failover" src="https://user-images.githubusercontent.com/110976272/193469646-c5256b28-8162-48ba-b627-7d89848f97d5.png">
 
 - As per the ARS1 learned routes from CSR NVA1, the On-prem range is no longer locally reflected but received from the Hub2 CSR NVA. This route will be programmed in all the VMs in the Hub1 VNET and its peered VNETs. Updated AS-path: Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 ASN overridden (64000) > NVA ASN (64000)
-<img width="259" alt="Scenario 2_ARS_Onprem routes_learned_failover" src="https://user-images.githubusercontent.com/110976272/193469739-5564240c-6a8a-4ee6-8f14-cad878722532.png">
+ <img width="254" alt="image" src="https://user-images.githubusercontent.com/110976272/193474166-628a8a9e-bd44-4ad3-8d23-8bf18f969924.png">
 
 # 7. Scenario 3: On-prem to On-prem
 
