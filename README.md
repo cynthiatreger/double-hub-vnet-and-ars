@@ -219,19 +219,18 @@ Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 V
 
 ### Data path & route analysis:
 
-- The On-prem route already observed in nominal mode and advertised by ARS2 to NVA2 is still valid. 
-  AS-path = Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 (65515)
-  <img width="242" alt="image" src="https://user-images.githubusercontent.com/110976272/193474108-e658d9c9-9967-4157-84c1-a21949602d19.png">
+- The On-prem route already observed in nominal mode and advertised by ARS2 to NVA2 is still valid. AS-path = Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 (65515)
+ <img width="242" alt="image" src="https://user-images.githubusercontent.com/110976272/193474108-e658d9c9-9967-4157-84c1-a21949602d19.png">
 
 - The CSR1 routing table for the 10.2.0.0/16 On-prem range has now NVA2 as next-hop:
-  <img width="562" alt="Scenario 2_CSR_sh ip route Onprem_failover" src="https://user-images.githubusercontent.com/110976272/193469614-aa0e06fc-a9b6-4082-8e88-8822ce8d398b.png">
+ <img width="562" alt="Scenario 2_CSR_sh ip route Onprem_failover" src="https://user-images.githubusercontent.com/110976272/193469614-aa0e06fc-a9b6-4082-8e88-8822ce8d398b.png">
 
 - This route is BGP learned from NVA2:
-  <img width="473" alt="Scenario 2_CSR_sh ip bgp Onprem range_failover" src="https://user-images.githubusercontent.com/110976272/193469646-c5256b28-8162-48ba-b627-7d89848f97d5.png">
+ <img width="473" alt="Scenario 2_CSR_sh ip bgp Onprem range_failover" src="https://user-images.githubusercontent.com/110976272/193469646-c5256b28-8162-48ba-b627-7d89848f97d5.png">
 
 - As per the ARS1 learned routes from CSR NVA1, the On-prem range is no longer locally reflected but received from the Hub2 CSR NVA. This route will be programmed in all the VMs in the Hub1 VNET and its peered VNETs. 
-  Updated AS-path: Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 ASN overridden (64000) > NVA ASN (64000)
-  <img width="254" alt="image" src="https://user-images.githubusercontent.com/110976272/193474166-628a8a9e-bd44-4ad3-8d23-8bf18f969924.png">
+ Updated AS-path: Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 ASN overridden (64000) > NVA ASN (64000)
+ <img width="254" alt="image" src="https://user-images.githubusercontent.com/110976272/193474166-628a8a9e-bd44-4ad3-8d23-8bf18f969924.png">
 
 # 7. Scenario 3: On-prem to On-prem
 
