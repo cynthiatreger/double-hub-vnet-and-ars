@@ -234,4 +234,38 @@ Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 V
 
 # 7. Scenario 3: On-prem to On-prem
 
+To demonstrate the On-prem to On-prem connectivity, the initial lab topology is slightly modified with 2 separate ASNs and address spaces for Branch 1 and Branch2.
+
+Topology
+ 
+Each remote Branch address space is available in the local Branch VM NIC Effective routes:
+
+ Branch1 VM:
+ <img width="713" alt="Scenario 3_Branch1 VM NIC" src="https://user-images.githubusercontent.com/110976272/193650189-2459794d-17b4-4d6b-bd5b-85e5f2a7fc1d.png">
+
+Branch2 VM:
+ <img width="725" alt="Scenario 3_Branch2VM NIC" src="https://user-images.githubusercontent.com/110976272/193650302-64a7e12d-d642-4975-bd3f-b531b8772529.png">
+
+### Data path & route analysis:
+
+- The 10.8.0.0/24 Branch2 On-prem route is advertised by ARS2 to NVA2
+ <img width="260" alt="image" src="https://user-images.githubusercontent.com/110976272/193651506-692c27c3-1e53-4f2a-aaf9-33c53c3b59ee.png">
+
+
+- NVA1 sh ip bgp 10.8
+ <img width="559" alt="image" src="https://user-images.githubusercontent.com/110976272/193651835-f5c59732-be83-46e1-9063-860f28638fe9.png">
+
+- NVA1 sh ip bgp nei adv
+ <img width="615" alt="image" src="https://user-images.githubusercontent.com/110976272/193652034-93cbd61a-2512-4631-afa8-a439a488c0c8.png">
+
+ 
+ AS-path = Branch1VPNGW (300) > Hub2VPNGW (200) > ARS2 (65515)
+
+ 
+- learned by ARS1 from the Hub1 CSR NVA:
+ <img width="272" alt="image" src="https://user-images.githubusercontent.com/110976272/193650715-791e664e-dfe2-4117-a526-cc655e9da207.png">
+
+- Received via BGP from the Branch1 VPN GW:
+ <img width="842" alt="image" src="https://user-images.githubusercontent.com/110976272/193651176-a19456b5-5c31-4800-8565-23dac9de8201.png">
+
 
