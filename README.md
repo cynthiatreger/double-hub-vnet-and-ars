@@ -253,7 +253,6 @@ Branch2 VM:
  <img width="260" alt="image" src="https://user-images.githubusercontent.com/110976272/193651506-692c27c3-1e53-4f2a-aaf9-33c53c3b59ee.png">
 
 - The Hub1 CSR NVA receives this route via BGP from NVA2 and advertises it to ARS1, the AS-path is unchanged as still in the NVA 64000 AS:
- 
  <img width="559" alt="image" src="https://user-images.githubusercontent.com/110976272/193651835-f5c59732-be83-46e1-9063-860f28638fe9.png">
  <img width="615" alt="image" src="https://user-images.githubusercontent.com/110976272/193652034-93cbd61a-2512-4631-afa8-a439a488c0c8.png">
  
