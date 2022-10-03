@@ -169,7 +169,6 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
 ## 6.1. Nominal mode
  
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
-diagram?
 
 Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
 
@@ -190,18 +189,18 @@ AS-path = ARS2 (65515 rewritten in 64000 when reaching ARS1) > NVA2 (64000) > NV
  <img width="232" alt="image" src="https://user-images.githubusercontent.com/110976272/193522830-b7bfbd72-6749-418d-9df0-cb68e1b28d1c.png">
  
 - The 10.2.0.0/16 On-prem range is also “locally” available in Hub2 and its peered VNETs, and advertised by ARS2 to the Hub2 CSR NVA and further to the Hub1 CSR NVA:
-  <img width="242" alt="image" src="https://user-images.githubusercontent.com/110976272/193474073-d0d03030-99ec-479e-8fab-bbf3c4dd2577.png">
+ <img width="242" alt="image" src="https://user-images.githubusercontent.com/110976272/193474073-d0d03030-99ec-479e-8fab-bbf3c4dd2577.png">
 
 - However the Hub1 CSR NVA prefers its “local” Hub1 On-prem route and will not propagate the On-prem route learned from Hub2:
-  <img width="512" alt="image" src="https://user-images.githubusercontent.com/110976272/193524009-a3ad1f2b-b64f-45de-8572-00b943d04728.png">
+ <img width="512" alt="image" src="https://user-images.githubusercontent.com/110976272/193524009-a3ad1f2b-b64f-45de-8572-00b943d04728.png">
   
 - Instead, it will reflect back to ARS1 the Hub1 10.2.0.0/16 On-prem route received:
-  <img width="604" alt="image" src="https://user-images.githubusercontent.com/110976272/193526327-12d8edcc-1000-4c37-84f1-563d43dfefa1.png">
+ <img width="604" alt="image" src="https://user-images.githubusercontent.com/110976272/193526327-12d8edcc-1000-4c37-84f1-563d43dfefa1.png">
   This illustrates the impact of the *as-override* configured on the CSR NVA sessions with the ARS.
 
 - This looped route (no further used) can also be observed on the ARS1 learned routes from the Hub1 CSR NVA, as per the AS-path:
-  Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000). 
-  <img width="263" alt="image" src="https://user-images.githubusercontent.com/110976272/193523250-53db5d97-980d-4a69-a5fe-d04574c84275.png">
+  Branch1VPNGW (300) > Hub1 VPN GW (100) > ARS1 ASN overridden (64000) > NVA1 ASN (64000).
+ <img width="263" alt="image" src="https://user-images.githubusercontent.com/110976272/193523250-53db5d97-980d-4a69-a5fe-d04574c84275.png">
 
 ## 6.2. Failover mode (Hub1-Branch1 S2S down)
 
