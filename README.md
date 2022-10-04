@@ -10,7 +10,7 @@ Great MicroHack for a deep-dive on ARS routing scenarios : [malgebary/Azure-Rout
 
 # 2. Introduction
 
-This lab demonstrates how a double Hub & Spoke topology leveraging Azure Route Server (ARS) can be used to provide On-prem and Inter-region connectivity as well as On-prem failover, i.e. a customer-managed version of a small vWAN deployment.
+This lab demonstrates how a double Hub & Spoke topology leveraging Azure Route Server (ARS) can be used to provide On-prem, Inter-region and Transit connectivity as well as On-prem failover, i.e. a customer-managed version of a small vWAN deployment.
 
 The Inter-region (Spoke-to-Spoke) and On-prem scenarios have been successfully deployed with both S2S VPN and ER On-prem connectivity. For simplicity and ease of reproduction, only the S2S VPN deployment is detailed here.
 
@@ -143,7 +143,6 @@ router bgp 64000
 # 5. Scenario 1: Spoke-to-Spoke
 
 Spoke to Spoke communication transits via the CSR NVA BGP peering.
-Diagram?
 
 In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 20.3.0.0/16) have NVA1 as next-hop virtual gateway:
 
@@ -252,9 +251,8 @@ Branch2 VM:
 - The 10.8.0.0/24 Branch2 On-prem route is advertised by ARS2 to NVA2, AS-path = Branch2 (400) > Hub2VPNGW (200) > ARS2 (65515):
  <img width="260" alt="image" src="https://user-images.githubusercontent.com/110976272/193651506-692c27c3-1e53-4f2a-aaf9-33c53c3b59ee.png">
 
-- The Hub1 CSR NVA receives this route via BGP from NVA2 and advertises it to ARS1, the AS-path is unchanged as still in the NVA 64000 AS:
-
-<img width="559" alt="image" src="https://user-images.githubusercontent.com/110976272/193651835-f5c59732-be83-46e1-9063-860f28638fe9.png">
+- NVA1 receives this route via iBGP from NVA2 and advertises it to ARS1:
+ <img width="559" alt="image" src="https://user-images.githubusercontent.com/110976272/193651835-f5c59732-be83-46e1-9063-860f28638fe9.png">
  <img width="615" alt="image" src="https://user-images.githubusercontent.com/110976272/193652034-93cbd61a-2512-4631-afa8-a439a488c0c8.png">
  
 - When received by ARS1 from NVA1, the  AS-path is the following: Branch2 (400) > Hub2VPNGW (200) > ARS2 (65515 overridden to 64000) > NVA2 (64000) > NVA1 (iBGP).
