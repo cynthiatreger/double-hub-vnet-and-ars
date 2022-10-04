@@ -169,7 +169,7 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
  
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
 
-Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. Effective routes of Spoke1VM-nic:
+Traffic from the Azure Spoke VNETs to the 10.2.0.0/16 On-prem subnet is sent to the peered Hub VPN GW. *Effective routes* of Spoke1VM-nic:
 
 <img width="698" alt="Scenario 2_Spoke1VM_Effective routes" src="https://user-images.githubusercontent.com/110976272/193461177-fc5b5761-7d16-43cf-8db6-916567e18029.png">
 
@@ -207,8 +207,9 @@ To simulate the failover, the Hub1-Branch1 S2S Connection is deleted:
 
 Traffic between Azure and On-prem switches to the cross-Hub VNET NVA path to use the remaining exit to On-prem.
 
-Traffic from Azure to the 10.2.0.0/16 On-prem subnet is now sent to NVA1, where it will be passed to the NVA2 and Hub2 VPN GW. Effective routes of Spoke1VM-nic:
- <img width="686" alt="Scenario 2_Spoke1VM_Effective routes_failover" src="https://user-images.githubusercontent.com/110976272/193469419-52cfc04d-0870-4807-a592-298f1be8673b.png">
+Traffic from Azure to the 10.2.0.0/16 On-prem subnet is now sent to NVA1, where it will be passed to the NVA2 and Hub2 VPN GW. *Effective routes* of Spoke1VM-nic:
+ 
+<img width="686" alt="Scenario 2_Spoke1VM_Effective routes_failover" src="https://user-images.githubusercontent.com/110976272/193469419-52cfc04d-0870-4807-a592-298f1be8673b.png">
 
 The return updated On-prem routes can be observed from the Branch2 VPNGW BGP learned routes:
  <img width="787" alt="Scenario 2_Branch2 VPNGW learned routes_failover" src="https://user-images.githubusercontent.com/110976272/193469432-bfedd908-026e-41e4-b3e0-e403e8d427e4.png">
@@ -236,7 +237,7 @@ To demonstrate the On-prem to On-prem connectivity, the initial lab topology is 
 
 Topology
  
-Each remote Branch address space is available in the local Branch VM NIC Effective routes:
+Each remote Branch address space is available in the local Branch VM NIC *Effective routes*:
 
  Branch1 VM:
  
