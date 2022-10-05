@@ -235,7 +235,7 @@ Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 V
 
 To demonstrate the On-prem to On-prem connectivity, the initial lab topology is slightly modified with 2 separate ASNs and address spaces for Branch 1 and Branch2.
 
-<img width="734" alt="image" src="https://user-images.githubusercontent.com/110976272/194040190-cb7127e1-f33a-4be0-88cb-5ddbd93d6f49.png">
+<img width="698" alt="image" src="https://user-images.githubusercontent.com/110976272/194040394-f30ca234-080f-461c-aa01-32ee2707e15b.png">
 
 Each remote Branch address space is available in the local Branch VM NIC *Effective routes*:
 
