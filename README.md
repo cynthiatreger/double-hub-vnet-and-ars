@@ -40,7 +40,7 @@ Bastion is configured in the Hub and Branch VNETs for VM connectivity.
 
 ## Topology
 
-<img width="731" alt="image" src="https://user-images.githubusercontent.com/110976272/194017041-2342d3e3-23ff-48be-abcf-2dd63f522856.png">
+<img width="821" alt="image" src="https://user-images.githubusercontent.com/110976272/194036536-f05acd7b-fcfd-43de-8931-a8c0de36fbb0.png">
 
 # 4. Routing and Troubleshooting
 
