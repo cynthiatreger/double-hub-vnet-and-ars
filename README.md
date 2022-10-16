@@ -2,7 +2,9 @@
 
 # 1. Suggested pre-reading
 
-This lab is inspired by:
+This lab has been suggested by Daniele Gaiulli in support of his recent article on traffic segregation over plutiple ER circuits in Hub & Spoke topologies: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options)
+
+And inspired by:
 -	Scenarios 4 & 5 of the [jocortems/azurehybridnetworking/ExpressRoute-Transit-with-Azure-RouteServer](https://github.com/jocortems/azurehybridnetworking/tree/main/ExpressRoute-Transit-with-Azure-RouteServer#4-multi-region--multi-nic-nvas-with-route-tables)
 - Deplyment of an ARS with Cisco CSR NVA Hub VNET : [mddazure/azure-route-server-lab](https://github.com/mddazure/azure-route-server-lab).
 
