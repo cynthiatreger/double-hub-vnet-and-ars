@@ -2,7 +2,7 @@
 
 # 1. Suggested pre-reading
 
-This lab has been suggested by Daniele Gaiulli in support of his recent article on traffic segregation over plutiple ER circuits in Hub & Spoke topologies: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options)
+This lab has been suggested by Daniele Gaiulli in support of his recent article on traffic segregation over mutiple ER circuits in Hub & Spoke topologies: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options)
 
 And inspired by:
 -	Scenarios 4 & 5 of the [jocortems/azurehybridnetworking/ExpressRoute-Transit-with-Azure-RouteServer](https://github.com/jocortems/azurehybridnetworking/tree/main/ExpressRoute-Transit-with-Azure-RouteServer#4-multi-region--multi-nic-nvas-with-route-tables)
@@ -137,10 +137,10 @@ router bgp 64000
 | VPN GW | BGP learned and advertised routes | GUI / VPNGW *BGP peers* blade |
 | ARS | routes learned from the NVA | az CLI / `az network routeserver peering list-learned-routes --name <rs_peer_name> --routeserver <rs_name> --resource-group <rg_name>` |
 | ARS | routes advertised to the NVA | az CLI / `az network routeserver peering list-advertised-routes --name <rs_peer_name> --routeserver <rs_name> --resource-group <rg_name>` 
-| CSR | BGP neighbors & session status | Cisco CLI / `show ip bgp summary` |
-| CSR | BGP routes learned from specified neighbor | Cisco CLI / `show ip bgp neighbors <peer_ip_@> routes` |
-| CSR | advertised BGP routes | Cisco CLI / `show ip bgp neighbors <peer_ip_@> advertised-routes` |
-| CSR | BGP originated routes in the IP routing table | Cisco CLI / `show ip route bgp` |
+| CSR (NVA) | BGP neighbors & session status | Cisco CLI / `show ip bgp summary` |
+| CSR (NVA) | BGP routes learned from specified neighbor | Cisco CLI / `show ip bgp neighbors <peer_ip_@> routes` |
+| CSR (NVA) | advertised BGP routes | Cisco CLI / `show ip bgp neighbors <peer_ip_@> advertised-routes` |
+| CSR (NVA) | BGP originated routes in the IP routing table | Cisco CLI / `show ip route bgp` |
 
 # 5. Scenario 1: Spoke-to-Spoke
 
