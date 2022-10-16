@@ -2,7 +2,7 @@
 
 # 1. Suggested pre-reading
 
-This lab has been suggested by Daniele Gaiulli in support of his recent article on traffic segregation over mutiple ER circuits in Hub & Spoke topologies: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options)
+This lab has been suggested by Daniele Gaiulli in support of his recent article on traffic segregation over mutiple ER circuits in Hub & Spoke topologies to illustrate one of the many scenarios addressed: [Danieleg82/EXR-segregation-options] (https://github.com/Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options#scenario-1c--double-hub-and-direct-peering-between-hubs--azure-route-server)
 
 And inspired by:
 -	Scenarios 4 & 5 of the [jocortems/azurehybridnetworking/ExpressRoute-Transit-with-Azure-RouteServer](https://github.com/jocortems/azurehybridnetworking/tree/main/ExpressRoute-Transit-with-Azure-RouteServer#4-multi-region--multi-nic-nvas-with-route-tables)
