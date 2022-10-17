@@ -2,7 +2,7 @@
 
 # 1. Suggested pre-reading
 
-This lab has been suggested by Daniele Gaiulli in support of his recent article on traffic segregation over mutiple ER circuits in Hub & Spoke topologies to illustrate one of the many scenarios addressed: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options#scenario-1c--double-hub-and-direct-peering-between-hubs--azure-route-server)
+This lab has been suggested by my networking friend Daniele Gaiulli in support of his recent article on traffic segregation over mutiple ER circuits, to illustrate one of the many scenarios addressed: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options#scenario-1c--double-hub-and-direct-peering-between-hubs--azure-route-server)
 
 And inspired by:
 -	Scenarios 4 & 5 of the [jocortems/azurehybridnetworking/ExpressRoute-Transit-with-Azure-RouteServer](https://github.com/jocortems/azurehybridnetworking/tree/main/ExpressRoute-Transit-with-Azure-RouteServer#4-multi-region--multi-nic-nvas-with-route-tables)
@@ -15,6 +15,8 @@ Great MicroHack for a deep-dive on ARS routing scenarios : [malgebary/Azure-Rout
 This lab demonstrates how a double Hub & Spoke topology leveraging Azure Route Server (ARS) can be used to provide On-prem, Inter-region and Transit connectivity as well as On-prem failover, i.e. a customer-managed version of a small vWAN deployment.
 
 The Inter-region (Spoke-to-Spoke) and On-prem scenarios have been successfully deployed with both S2S VPN and ER On-prem connectivity. For simplicity and ease of reproduction, only the S2S VPN deployment is detailed here.
+
+*As highlighted by Daniele, this solution should be preferred to its vWAN version only in case of specific blockers regarding the adoption of vWAN/vhubs, since it  offers the same topology but with much higher implementation complexity.*
 
 # 3. Lab Description and Topology
 
@@ -32,7 +34,7 @@ The connectivity between Azure and On-prem is provided by S2S VPN.
 Each VNET contains a test VM in the *VMSubnet*.
 
 In addition, each hub VNET contains:
--	1 x ARS in the *RouteServerSubnet*
+-	1 x ARS in the *RouteServerSubnet* with B2B enabled
 -	1 x active/active VPN GW (mandatory for the deployment of ARS in the Hub VNET) in the GatewaySubnet
 -	1 x CSR NVA in the *CSRSubnet*
 
@@ -69,12 +71,17 @@ With this design static routes to the targeted destination VNETs are mandatory o
 
 ## CSR configuration
 
+To accept the terms for the CSR1000v Marketplace offer:
+```
+az vm image terms accept --urn cisco:cisco-csr-1000v:<offer_id>-byol:latest
+```
+
 CSR1
 ```
 interface Loopback11
  ip address 1.1.1.1 255.255.255.255
 !
-! default route pointing to CSR subnet default gateway, so that tunnel outside traffic and internet go out LAN port
+! default route pointing to CSR subnet default gateway, to force traffic out of the LAN port
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 10.0.253.1
 ! neighbor reachability of the remote CSR to prevent recursive routing failure ! for CSR2 BGP endpoint learned via BGP
 ip route 20.0.253.4 255.255.255.255 GigabitEthernet1 10.0.253.1
@@ -105,7 +112,7 @@ CSR2
 interface Loopback22
  ip address 2.2.2.2 255.255.255.255
 !
-! default route pointing to CSR subnet default gateway, so that tunnel outside traffic and internet go out LAN port
+! default route pointing to CSR subnet default gateway, to force traffic out of the LAN port
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 20.0.253.1
 ! neighbor reachability of the remote CSR to prevent recursive routing failure ! for CSR1 BGP endpoint learned via BGP
 ip route 10.0.253.4 255.255.255.255 GigabitEthernet1 20.0.253.1
@@ -144,7 +151,7 @@ router bgp 64000
 
 # 5. Scenario 1: Spoke-to-Spoke
 
-Spoke to Spoke communication transits via the CSR NVA BGP peering.
+Spoke to Spoke communications transit via the CSR NVA BGP peering.
 
 In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 20.3.0.0/16) have NVA1 as next-hop virtual gateway:
 
@@ -152,17 +159,17 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
 
 ### Data path & route analysis:
  
-- ARS2 is advertising the Hub2 & Spoke2 ranges to NVA2, AS-path = ARS2 (65515):
+- ARS2 advertises the Hub2 & Spoke2 ranges to NVA2, AS-path = ARS2 (65515):
  <img width="234" alt="image" src="https://user-images.githubusercontent.com/110976272/193474025-79bcb2b0-8d41-4851-b9bd-8a8f0e066e82.png">
 
-- NVA2 is installing these routes in its routing table and forwarding them to NVA1, the AS-path in unchanged:
+- NVA2 installs these routes in its routing table and forwarding them to NVA1, the AS-path in unchanged:
  <img width="574" alt="Scenario 1_CSR2_sh ip route bgp Spoke" src="https://user-images.githubusercontent.com/110976272/193465413-f14c9bc4-f339-4bbc-bd5a-31570cd3f9a3.png">
  <img width="599" alt="Scenario 1_CSR2_sh ip bgp nei adv routes_Spokes" src="https://user-images.githubusercontent.com/110976272/193465419-5e605e0b-39d5-463f-a4cb-817e366e02ab.png">
 
-- Likewise, NVA1 is installing the Hub2 & Spoke2 ranges in its routing table and advertising them further to ARS1:
+- Likewise, NVA1 installs the Hub2 & Spoke2 ranges in its routing table and advertises them further to ARS1:
  <img width="585" alt="Scenario 1_CSR_sh ip bgp advertised routes_spoke routes" src="https://user-images.githubusercontent.com/110976272/193465446-abe8678b-7e72-4884-8838-89a8db5b7c8b.png">
 
-- ARS1 is learning the Hub2 and Spoke2 ranges from NVA1 and programming all the VMs in its VNET and peered VNETs with these routes. The resulting AS-path illustrates the impact of the *as-override* configured on the NVA sessions with the ARS: the 65515 ARS2 ASN is replaced by 64000 (the NVAs ASN) before reaching ARS1:
+- ARS1 learns the Hub2 and Spoke2 ranges from NVA1 and programs all the VMs in its VNET and peered VNETs with these routes. The resulting AS-path illustrates the impact of the *as-override* configured on the NVA sessions with the ARS: the 65515 ARS2 ASN is replaced by 64000 (the NVAs ASN) before reaching ARS1:
  <img width="235" alt="image" src="https://user-images.githubusercontent.com/110976272/193473788-fa4799cd-f457-4f52-9963-dfad714a5674.png">
  
 # 6. Scenario 2: Azure <=> On-prem
@@ -263,5 +270,3 @@ Branch2 VM:
 
 - Finally, after crossing the Hub1 VPN GW, the Branch2 VPN GW contains the 10.8.0.0/24 Branch2 On-prem route with AS-path = Branch2 (400) > Hub2VPNGW (200) > ARS2 (65515 overridden to 64000) > NVA2 (64000) > NVA1 (iBGP) > ARS1 (65515) > Hub1VPNGW (100) :
  <img width="842" alt="image" src="https://user-images.githubusercontent.com/110976272/193651176-a19456b5-5c31-4800-8565-23dac9de8201.png">
-
-
