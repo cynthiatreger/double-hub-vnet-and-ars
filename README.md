@@ -1,6 +1,6 @@
 # DIY vWAN: double Hub VNET and Azure Route Server
 
-## **Table of Content:**
+# **Table of Content**
 
 [1. BACKGROUND](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#1-background)
 
@@ -53,7 +53,7 @@ Each VNET contains a test VM in the *VMSubnet*.
 
 In addition, each hub VNET contains:
 -	1 x ARS in the *RouteServerSubnet* with B2B enabled
--	1 x active/active VPN GW (mandatory for the deployment of ARS in the Hub VNET) in the GatewaySubnet
+-	1 x active/active VPN GW (mandatory for the deployment of ARS in the Hub VNET) in the *GatewaySubnet*
 -	1 x CSR NVA in the *CSRSubnet*
 
 Bastion is configured in the Hub and Branch VNETs for VM connectivity.
@@ -72,16 +72,21 @@ Ensure Azure CLI and extensions are up to date:
 ```
 az upgrade --yes
 ```
-
 If necessary select your target subscription:
 ```
 az account set --subscription <Name or ID of subscription>
 ```
-Download the Navigate to the template directory.
+Download the .tf files and navigate to the target directory.
 
 Accept the terms for the CSR1000v Marketplace offer before deploying the template:
 ```
 az vm image terms accept --urn cisco:cisco-csr-1000v:<Offer ID>-byol:latest
+```
+Build the lab using Terraform:
+```
+terraform init
+terraform plan
+terraform apply
 ```
 
 # 5. Routing and Troubleshooting
