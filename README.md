@@ -108,6 +108,7 @@ Each CSR NVA establishes BGP peerings using its NIC IP address:
 -	with the remote CSR (1 iBGP session)
 
 Loopback addresses are configured and used for “probing” the NVA route propagation. It is not possible to use loopback addresses on the peering with the ARS.
+
 The ARS is NOT in the data path but will enable the routing information received from the BGP peering between the ARS and the CSR NVA to be added to the Hub and peered VNETs. 
 
 Because the ARS ASN is hard coded to 65515, BGP *as-override* is configured on the CSR NVA BGP sessions towards the ARS. This guarantees the expected route advertisements between the 2 Hub VNETs and further to the Spokes/Branches by replacing the 65515 ARS ASN in the AS-path by the CSR NVA ASN (64000) before readvertisement to the remote ARS. 
