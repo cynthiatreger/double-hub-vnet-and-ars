@@ -1,22 +1,15 @@
 # DIY vWAN: double Hub VNET and Azure Route Server
 
-## **Table of Content:**
+### **Table of Content:**
 
-[1. Background](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#1-background)
-
-[2. Intro](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#2-introduction)
-
-[3. Lab Description and Topology](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#3-lab-description-and-topology)
-
-[4. Deployment](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#4-deployment)
-
-[5. Routing & Troubleshooting](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#5-routing-and-troubleshooting)
-
-[6. Scenario 1: Spoke-to-Spoke](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#6-scenario-1-spoke-to-spoke)
-
-[7. Scenario 2: Azure => On-prem](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#7-scenario-2-azure--on-prem)
-
-[8. Scenario 3: On-prem to On-prem](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#8-scenario-3-on-prem-to-on-prem)
+[1. BACKGROUND](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#1-background)
+[2. INTRO](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#2-introduction)
+[3. LAB DESCRIPTION & TOPOLOGY](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#3-lab-description-and-topology)
+[4. DEPLOYMENT](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#4-deployment)
+[5. ROUTING & TROUBLESHOOTING](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#5-routing-and-troubleshooting)
+[6. SCENARIO 1: SPOKE-TO-SPOKE](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#6-scenario-1-spoke-to-spoke)
+[7. SCENARIO 2: AZURE <=> ON-PREM](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#7-scenario-2-azure--on-prem)
+[8. SCENARIO 3: ON-PREM TO ON-PREM](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#8-scenario-3-on-prem-to-on-prem)
 
 # 1. Background
 
@@ -81,7 +74,7 @@ Download the Navigate to the template directory.
 
 Accept the terms for the CSR1000v Marketplace offer before deploying the template:
 ```
-az vm image terms accept --urn cisco:cisco-csr-1000v:<offer_id>-byol:latest
+az vm image terms accept --urn cisco:cisco-csr-1000v:<Offer ID>-byol:latest
 ```
 
 # 5. Routing and Troubleshooting
