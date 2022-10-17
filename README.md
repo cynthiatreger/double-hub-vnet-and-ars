@@ -1,6 +1,6 @@
 # DIY vWAN: double Hub VNET and Azure Route Server
 
-# **Table of Content:**
+## **Table of Content:**
 
 [1. Background](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#1-background)
 
