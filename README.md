@@ -1,6 +1,17 @@
 # DIY vWAN: double Hub VNET and Azure Route Server
 
-# 1. Suggested pre-reading
+# **TABLE OF CONTENT:**
+
+[1. Background](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#1-background)
+[2. Intro](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#2-introduction)
+[3. Lab Description and Topology](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#3-lab-description-and-topology)
+[4. Deployment](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#4-deployment)
+[5. Routing & Troubleshooting](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#5-routing-and-troubleshooting)
+[6. Scenario 1: Spoke-to-Spoke](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#6-scenario-1-spoke-to-spoke)
+[7. Scenario 2: Azure => On-prem](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#7-scenario-2-azure--on-prem)
+[8. Scenario 3: On-prem to On-prem](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#8-scenario-3-on-prem-to-on-prem)
+
+# 1. Background
 
 This lab has been suggested by my networking friend Daniele Gaiulli in support of his recent article on traffic segregation over mutiple ER circuits, to illustrate one of the many scenarios addressed: [Danieleg82/EXR-segregation-options](https://github.com/Danieleg82/EXR-segregation-options#scenario-1c--double-hub-and-direct-peering-between-hubs--azure-route-server)
 
@@ -16,11 +27,7 @@ This lab demonstrates how a double Hub & Spoke topology leveraging Azure Route S
 
 The Inter-region (Spoke-to-Spoke) and On-prem scenarios have been successfully deployed with both S2S VPN and ER On-prem connectivity. For simplicity and ease of reproduction, only the S2S VPN deployment is detailed here.
 
-*As highlighted by Daniele, this solution should be preferred to its vWAN version only in case of specific blockers regarding the adoption of vWAN/vhubs, since it  offers the same topology but with much higher implementation complexity.*
-
-**TABLE OF CONTENT:**
-
-[Lab Description and Topology](# 3. Lab Description and Topology)
+**As highlighted by Daniele, this solution should be preferred to its vWAN version only in case of specific blockers regarding the adoption of vWAN/vhubs, since it  offers the same topology but with much higher implementation complexity.**
 
 # 3. Lab Description and Topology
 
