@@ -72,12 +72,18 @@ Ensure Azure CLI and extensions are up to date:
 ```
 az upgrade --yes
 ```
-If necessary select your target subscription:
+Select your target subscription:
 ```
 az account set --subscription <Name or ID of subscription>
 ```
-Download the .tf files and navigate to the target directory.
-
+Clone the GitHub repository:
+```
+git clone https://github.com/cynthiatreger/double-hub-vnet-and-ars
+```
+Change directory:
+```
+cd ./double-hub-vnet-and-ars
+```
 Accept the terms for the CSR1000v Marketplace offer before deploying the template:
 ```
 az vm image terms accept --urn cisco:cisco-csr-1000v:<Offer ID>-byol:latest
@@ -108,9 +114,15 @@ Because the ARS ASN is hard coded to 65515, BGP *as-override* is configured on t
 
 Finally, *next-hop-self* is required on the iBGP session between the 2 CSR NVAs so that when routes get advertised from one Hub VNET to the other, the ARS Next-Hop is replaced by the CSR NIC IP.
 
+## Hub VPN Gateway AS number considerations
+
+In this lab, the On-prem is emulated by a VNET and a VPN GW. When configuring the BGP peering on this pseudo On-prem LNG to the Hub VPN GW, the Hub VPN GW ASN cannot be 65515 (it can be 65515 exclusively if the remote side is a vWAN GW, which is not our case) and as a result must be customized here.
+
+**However, please note that the Hub VPN GW must be 65515 for full supportability like documented [here](https://learn.microsoft.com/en-us/azure/route-server/expressroute-vpn-support) and for further Expressroute to VPN transit.**
+
 ## UDRs
 
-With this design static routes to the targeted destination VNETs are mandatory on the *CSRSubnet* to avoid routing loops out of the CSR NVA NIC. The UDR constraint can be removed by using VxLAN or IPSec between the 2 CSR NVAs but will result in throughput limitation.
+With this design static routes to the targeted destination VNETs are mandatory on the *CSRSubnet* to avoid routing loops out of the CSR NVA NIC. The UDR constraint can be removed by using VxLAN or IPSec between the 2 CSR NVAs but may introduce performance bottlenecks.
 
 ## CSR configuration
 
