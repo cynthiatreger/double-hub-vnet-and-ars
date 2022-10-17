@@ -18,6 +18,10 @@ The Inter-region (Spoke-to-Spoke) and On-prem scenarios have been successfully d
 
 *As highlighted by Daniele, this solution should be preferred to its vWAN version only in case of specific blockers regarding the adoption of vWAN/vhubs, since it  offers the same topology but with much higher implementation complexity.*
 
+**TABLE OF CONTENT:**
+
+[Lab Description and Topology](# 3. Lab Description and Topology)
+
 # 3. Lab Description and Topology
 
 ## Description
@@ -59,14 +63,14 @@ If necessary select your target subscription:
 ```
 az account set --subscription <Name or ID of subscription>
 ```
-Download the Navigate to template directory.
+Download the Navigate to the template directory.
 
 Accept the terms for the CSR1000v Marketplace offer before deploying the template:
 ```
 az vm image terms accept --urn cisco:cisco-csr-1000v:<offer_id>-byol:latest
 ```
 
-# 4. Routing and Troubleshooting
+# 5. Routing and Troubleshooting
 
 ## VNET peering
 
@@ -164,7 +168,7 @@ router bgp 64000
 | CSR (NVA) | advertised BGP routes | Cisco CLI / `show ip bgp neighbors <peer_ip_@> advertised-routes` |
 | CSR (NVA) | BGP originated routes in the IP routing table | Cisco CLI / `show ip route bgp` |
 
-# 5. Scenario 1: Spoke-to-Spoke
+# 6. Scenario 1: Spoke-to-Spoke
 
 Spoke to Spoke communications transit via the CSR NVA BGP peering.
 
@@ -187,9 +191,9 @@ In the *Effective Routes* list of Spoke1VM, Hub2 & Spoke2 ranges (20.0.0.0/16 & 
 - ARS1 learns the Hub2 and Spoke2 ranges from NVA1 and programs all the VMs in its VNET and peered VNETs with these routes. The resulting AS-path illustrates the impact of the *as-override* configured on the NVA sessions with the ARS: the 65515 ARS2 ASN is replaced by 64000 (the NVAs ASN) before reaching ARS1:
  <img width="235" alt="image" src="https://user-images.githubusercontent.com/110976272/193473788-fa4799cd-f457-4f52-9963-dfad714a5674.png">
  
-# 6. Scenario 2: Azure <=> On-prem
+# 7. Scenario 2: Azure <=> On-prem
 
-## 6.1. Nominal mode
+## 7.1. Nominal mode
  
 In nominal mode traffic between Azure and On-prem transits via the “local” VPN GW.
 
@@ -224,7 +228,7 @@ AS-path = ARS2 (65515 overriden to 64000 when reaching ARS1) > NVA2 (64000) > NV
   Branch1 (300) > Hub1VPNGW (100) > ARS1 (65515 overriden to 64000) > NVA1 (64000).
  <img width="263" alt="image" src="https://user-images.githubusercontent.com/110976272/193523250-53db5d97-980d-4a69-a5fe-d04574c84275.png">
 
-## 6.2. Failover mode (Hub1-Branch1 S2S down)
+## 7.2. Failover mode (Hub1-Branch1 S2S down)
 
 To simulate the failover, the Hub1-Branch1 S2S Connection is deleted:
  <img width="986" alt="image" src="https://user-images.githubusercontent.com/110976272/193523469-1063a433-8323-456f-bf38-97357946e0b4.png">
@@ -255,7 +259,7 @@ Hub1 & Spoke 1 ranges (10.0.0.0/16 & 10.3.0.0/16) are originated from the Hub1 V
  Updated AS-path: Branch2 (300) > Hub2VPNGW (200) > ARS2 (65515 overridden to 64000) > NVA2 (64000) > NVA1 (iBGP)
  <img width="254" alt="image" src="https://user-images.githubusercontent.com/110976272/193474166-628a8a9e-bd44-4ad3-8d23-8bf18f969924.png">
 
-# 7. Scenario 3: On-prem to On-prem
+# 8. Scenario 3: On-prem to On-prem
 
 To demonstrate the On-prem to On-prem connectivity, the initial lab topology is slightly modified with 2 separate ASNs and address spaces for Branch 1 and Branch2.
 
