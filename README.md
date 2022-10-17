@@ -249,7 +249,7 @@ To simulate the failover, the Hub1-Branch1 S2S Connection is deleted:
 
 Traffic between Azure and On-prem switches to the cross-Hub VNET NVA path to use the remaining exit to On-prem.
 
-Traffic from Azure to the 10.2.0.0/16 On-prem subnet is now sent to NVA1, where it will be passed to the NVA2 and Hub2 VPN GW. *Effective routes* of Spoke1VM-nic:
+Traffic from Azure to the 10.2.0.0/16 On-prem subnet is now sent to NVA1, where it will be passed to NVA2 and Hub2 VPN GW. *Effective routes* of Spoke1VM-nic:
  
 <img width="686" alt="Scenario 2_Spoke1VM_Effective routes_failover" src="https://user-images.githubusercontent.com/110976272/193469419-52cfc04d-0870-4807-a592-298f1be8673b.png">
 
