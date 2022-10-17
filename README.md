@@ -46,6 +46,26 @@ Bastion is configured in the Hub and Branch VNETs for VM connectivity.
 
 <img width="821" alt="image" src="https://user-images.githubusercontent.com/110976272/194036536-f05acd7b-fcfd-43de-8931-a8c0de36fbb0.png">
 
+# 4. Deployment
+
+Log in to Azure Cloud Shell at https://shell.azure.com/ and select Bash.
+
+Ensure Azure CLI and extensions are up to date:
+```
+az upgrade --yes
+```
+
+If necessary select your target subscription:
+```
+az account set --subscription <Name or ID of subscription>
+```
+Download the Navigate to template directory.
+
+Accept the terms for the CSR1000v Marketplace offer before deploying the template:
+```
+az vm image terms accept --urn cisco:cisco-csr-1000v:<offer_id>-byol:latest
+```
+
 # 4. Routing and Troubleshooting
 
 ## VNET peering
@@ -70,11 +90,6 @@ Finally, *next-hop-self* is required on the iBGP session between the 2 CSR NVAs 
 With this design static routes to the targeted destination VNETs are mandatory on the *CSRSubnet* to avoid routing loops out of the CSR NVA NIC. The UDR constraint can be removed by using VxLAN or IPSec between the 2 CSR NVAs but will result in throughput limitation.
 
 ## CSR configuration
-
-To accept the terms for the CSR1000v Marketplace offer:
-```
-az vm image terms accept --urn cisco:cisco-csr-1000v:<offer_id>-byol:latest
-```
 
 CSR1
 ```
