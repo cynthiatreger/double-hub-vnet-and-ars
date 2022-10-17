@@ -1,14 +1,21 @@
 # DIY vWAN: double Hub VNET and Azure Route Server
 
-# **TABLE OF CONTENT:**
+# **Table of Content:**
 
 [1. Background](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#1-background)
+
 [2. Intro](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#2-introduction)
+
 [3. Lab Description and Topology](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#3-lab-description-and-topology)
+
 [4. Deployment](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#4-deployment)
+
 [5. Routing & Troubleshooting](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#5-routing-and-troubleshooting)
+
 [6. Scenario 1: Spoke-to-Spoke](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#6-scenario-1-spoke-to-spoke)
+
 [7. Scenario 2: Azure => On-prem](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#7-scenario-2-azure--on-prem)
+
 [8. Scenario 3: On-prem to On-prem](https://github.com/cynthiatreger/diy-vwan-double-hub-vnet-and-ars/blob/main/README.md#8-scenario-3-on-prem-to-on-prem)
 
 # 1. Background
