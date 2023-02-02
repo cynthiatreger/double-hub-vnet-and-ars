@@ -136,7 +136,7 @@ interface Loopback11
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 10.0.253.1
 ! neighbor reachability of the remote CSR to prevent recursive routing failure ! for CSR2 BGP endpoint learned via BGP
 ip route 20.0.253.4 255.255.255.255 GigabitEthernet1 10.0.253.1
-! ARS subnet reachability to prevent recursive routing
+! ARS subnet reachability to prevent recursive routing loop failure
 ip route 10.0.0.0 255.255.255.0 10.0.253.1
 !
 router bgp 64000
@@ -167,7 +167,7 @@ interface Loopback22
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 20.0.253.1
 ! neighbor reachability of the remote CSR to prevent recursive routing failure ! for CSR1 BGP endpoint learned via BGP
 ip route 10.0.253.4 255.255.255.255 GigabitEthernet1 20.0.253.1
-! ARS subnet reachability to prevent recursive routing failure
+! ARS subnet reachability to prevent recursive routing loop failure
 ip route 20.0.0.0 255.255.255.0 20.0.253.1
 !
 router bgp 64000
