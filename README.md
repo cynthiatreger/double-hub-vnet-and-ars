@@ -1,4 +1,4 @@
-# DIY vWAN: double Hub VNET and Azure Route Server
+# DIY vWAN: double Hub VNET and ARS (Azure Route Server)
 
 # **Table of Content**
 
